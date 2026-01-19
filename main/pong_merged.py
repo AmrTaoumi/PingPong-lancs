@@ -194,8 +194,30 @@ def keyup(event):
     elif event.key in (K_UP, K_DOWN):
         paddle2_vel = 0
 
-game_mode = input("Would you like to play against AI? (y/n): ")
-AI_player = True if game_mode == "y" else False
+
+
+while True:
+    game_mode = input("Would you like to play against AI? (y/n): ")
+    if game_mode not in ('y', 'n'):
+        continue
+    elif game_mode == 'n':
+        break
+    else:
+        pass
+    AI_player = True if game_mode == "y" else False
+    difficulty = input("Which difficulty would you like to play? [ Easy(e), Medium(m), Hard(h) ]")
+
+    if difficulty == "e":
+        LPAD_HEIGHT = HALF_PAD_HEIGHT
+        HALF_LPAD_HEIGHT = LPAD_HEIGHT // 2
+        break
+    elif difficulty == "m":
+        break
+    elif difficulty == "h":
+        RPAD_HEIGHT = HALF_PAD_HEIGHT
+        HALF_RPAD_HEIGHT = RPAD_HEIGHT // 2
+        break
+
 
 init()
 
