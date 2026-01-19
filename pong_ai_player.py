@@ -79,10 +79,13 @@ def draw(canvas):
 
     # logic for ai player (left)
     if AI_player:
-        if paddle1_pos[1] < ball_pos[1]:
-            paddle1_vel = 8
-        elif paddle1_pos[1] > ball_pos[1]:
-            paddle1_vel = -8
+        if ball_pos[0] < WIDTH/4:
+            if paddle1_pos[1] < ball_pos[1]:
+                paddle1_vel = 8
+            elif paddle1_pos[1] > ball_pos[1]:
+                paddle1_vel = -8
+            else:
+                paddle1_vel = 0
         else:
             paddle1_vel = 0
 
