@@ -41,6 +41,7 @@ paddle2_vel = 0
 l_score = 0
 r_score = 0
 AI_player = False
+BALL_SPEED_MULT = 1.5
 
 #canvas declaration
 window = pygame.display.set_mode((WIDTH, HEIGHT), 0, 32)
@@ -57,7 +58,10 @@ def ball_init(right):
     if right == False:
         horz = - horz
         
-    ball_vel = [horz,-vert]
+    ball_vel = [
+        horz * BALL_SPEED_MULT,
+        -vert * BALL_SPEED_MULT
+        ]
 
 # define event handlers
 def init():
@@ -75,7 +79,9 @@ def init():
 
 #draw function of canvas
 def draw(canvas):
-    global paddle1_pos, paddle2_pos, ball_pos, ball_vel, l_score, r_score
+    global paddle1_pos, paddle2_pos, ball_pos, ball_vel
+    global paddle1_vel, paddle2_vel, l_score, r_score
+
            
     canvas.fill(BLACK)
     pygame.draw.line(canvas, WHITE, [WIDTH // 2, 0],[WIDTH // 2, HEIGHT], 1)
@@ -136,7 +142,8 @@ def draw(canvas):
         ball_vel[1] *= 1.1
     elif int(ball_pos[0]) <= BALL_RADIUS + PAD_WIDTH:
         r_score += 1
-        update_paddle_height('r')
+        if AI_player != True:
+            update_paddle_height('r')
         ball_init(True)
         
     if int(ball_pos[0]) >= WIDTH + 1 - BALL_RADIUS - PAD_WIDTH and int(ball_pos[1]) in range(paddle2_pos[1] - HALF_PAD_HEIGHT,paddle2_pos[1] + HALF_PAD_HEIGHT,1):
@@ -145,7 +152,8 @@ def draw(canvas):
         ball_vel[1] *= 1.1
     elif int(ball_pos[0]) >= WIDTH + 1 - BALL_RADIUS - PAD_WIDTH:
         l_score += 1
-        update_paddle_height('l')
+        if AI_player != True:
+            update_paddle_height('l')
         ball_init(False)
 
     #update scores
@@ -198,25 +206,25 @@ def keyup(event):
 
 while True:
     game_mode = input("Would you like to play against AI? (y/n): ")
-    if game_mode not in ('y', 'n'):
-        continue
-    elif game_mode == 'n':
+    if game_mode in ('y', 'n'):
+        AI_player = (game_mode == 'y')
         break
-    else:
-        pass
-    AI_player = True if game_mode == "y" else False
-    difficulty = input("Which difficulty would you like to play? [ Easy(e), Medium(m), Hard(h) ]")
 
-    if difficulty == "e":
-        LPAD_HEIGHT = HALF_PAD_HEIGHT
-        HALF_LPAD_HEIGHT = LPAD_HEIGHT // 2
-        break
-    elif difficulty == "m":
-        break
-    elif difficulty == "h":
-        RPAD_HEIGHT = HALF_PAD_HEIGHT
-        HALF_RPAD_HEIGHT = RPAD_HEIGHT // 2
-        break
+if AI_player:
+    while True:
+        difficulty = input("Which difficulty would you like to play? [ Easy(e), Medium(m), Hard(h) ]")
+        if difficulty == "e":
+            LPAD_HEIGHT = HALF_PAD_HEIGHT
+            HALF_LPAD_HEIGHT = LPAD_HEIGHT // 2
+            BALL_SPEED_MULT = 1.0
+            break
+        elif difficulty == "m":
+            break
+        elif difficulty == "h":
+            BALL_SPEED_MULT = 2.3
+            RPAD_HEIGHT = HALF_PAD_HEIGHT
+            HALF_RPAD_HEIGHT = RPAD_HEIGHT // 2
+            break
 
 
 init()
